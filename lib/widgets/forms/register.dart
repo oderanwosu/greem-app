@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greem/widgets/snackbar.dart';
 
-import '../../providers/providers.dart';
+import '../../providers/auth_providers.dart';
 
 class RegisterForm extends StatefulWidget {
 
@@ -19,7 +19,7 @@ class _RegisterFormState extends State<RegisterForm> {
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
       final AsyncValue<void> state =
-          ref.watch(authScreenControllerProvider);
+          ref.watch(authControllerProvider);
       return Form(
         key: _formKey,
         child: Center(
@@ -34,12 +34,12 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
               TextFormField(
                 initialValue: ref
-                    .read(authScreenControllerProvider.notifier)
+                    .read(authControllerProvider.notifier)
                     .username,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), hintText: 'Enter username'),
                 onChanged: (val) {
-                  ref.read(authScreenControllerProvider.notifier).username =
+                  ref.read(authControllerProvider.notifier).username =
                       val;
                 },
                 validator: (value) {
@@ -53,11 +53,11 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
               TextFormField(
                 initialValue:
-                    ref.read(authScreenControllerProvider.notifier).email,
+                    ref.read(authControllerProvider.notifier).email,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), hintText: 'Enter email'),
                 onChanged: (val) {
-                  ref.read(authScreenControllerProvider.notifier).email =
+                  ref.read(authControllerProvider.notifier).email =
                       val;
                 },
                 validator: (value) {
@@ -71,7 +71,7 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
               TextFormField(
                 initialValue: ref
-                    .read(authScreenControllerProvider.notifier)
+                    .read(authControllerProvider.notifier)
                     .password,
                 obscureText: true,
                 decoration: const InputDecoration(
@@ -79,7 +79,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   hintText: 'Enter password',
                 ),
                 onChanged: (val) {
-                  ref.read(authScreenControllerProvider.notifier).password =
+                  ref.read(authControllerProvider.notifier).password =
                       val;
                 },
                 validator: (value) {
@@ -93,7 +93,7 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
               TextFormField(
                 initialValue: ref
-                    .read(authScreenControllerProvider.notifier)
+                    .read(authControllerProvider.notifier)
                     .confirmPassword,
                 obscureText: true,
                 decoration: const InputDecoration(
@@ -102,7 +102,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
                 onChanged: (val) {
                   ref
-                      .read(authScreenControllerProvider.notifier)
+                      .read(authControllerProvider.notifier)
                       .confirmPassword = val;
                 },
                 validator: (value) {
@@ -122,7 +122,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   onPressed: () async {
                     if ((_formKey.currentState!.validate())) {
                       await ref
-                          .read(authScreenControllerProvider.notifier)
+                          .read(authControllerProvider.notifier)
                           .register();
                     }
                     if (!state.hasError) {

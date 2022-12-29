@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greem/screens/home.dart';
 
-import '../../providers/providers.dart';
+import '../../providers/auth_providers.dart';
 
 class LoginForm extends StatefulWidget {
   LoginForm();
@@ -16,7 +16,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
-      final AsyncValue<void> state = ref.read(authScreenControllerProvider);
+      final AsyncValue<void> state = ref.read(authControllerProvider);
 
       return Form(
         key: _formKey,
@@ -33,7 +33,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
               TextFormField(
                 onChanged: (val) {
-                  ref.read(authScreenControllerProvider.notifier).email = val;
+                  ref.read(authControllerProvider.notifier).email = val;
                 },
                 validator: (value) {
                   if (value == '') {
@@ -41,7 +41,7 @@ class _LoginFormState extends State<LoginForm> {
                   }
                 },
                 initialValue:
-                    ref.read(authScreenControllerProvider.notifier).email,
+                    ref.read(authControllerProvider.notifier).email,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), hintText: 'Enter your email'),
               ),
@@ -50,7 +50,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
               TextFormField(
                 onChanged: (val) {
-                  ref.read(authScreenControllerProvider.notifier).password =
+                  ref.read(authControllerProvider.notifier).password =
                       val;
                 },
                 validator: (value) {
@@ -59,7 +59,7 @@ class _LoginFormState extends State<LoginForm> {
                   }
                 },
                 initialValue:
-                    ref.read(authScreenControllerProvider.notifier).password,
+                    ref.read(authControllerProvider.notifier).password,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Enter your password'),
@@ -75,7 +75,7 @@ class _LoginFormState extends State<LoginForm> {
                   onPressed: () async {
                     if ((_formKey.currentState!.validate())) {
                       await ref
-                          .read(authScreenControllerProvider.notifier)
+                          .read(authControllerProvider.notifier)
                           .login();
                     }
                   },

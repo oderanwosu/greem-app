@@ -10,7 +10,7 @@ class AuthRepository extends APIService {
   String _baseURL = 'http://localhost:3000';
   String _baseAuthURL = 'http://localhost:4000/auth';
 
-  AuthRepository({super.tokens});
+  AuthRepository({super.tokens, required super.ref});
 
   Future<dynamic> registerUser(
       {required String? username,
@@ -18,14 +18,12 @@ class AuthRepository extends APIService {
       required String? password}) async {
     Uri uri = Uri.parse('$_baseAuthURL/register');
     try {
-      http.Response response = await post(
+      http.Response? response = await post(
         uri: uri,
         body: {"username": username, "email": email, "password": password},
       );
-      if (!(response.statusCode == 201)) {
-        throw jsonDecode(response.body)["error_description"];
-      }
-      Object jsonData = jsonDecode(response.body);
+
+      Object jsonData = jsonDecode(response!.body);
       return AuthUser.fromJson(jsonData);
     } catch (e) {
       rethrow;
@@ -37,19 +35,15 @@ class AuthRepository extends APIService {
     Uri uri = Uri.parse('$_baseAuthURL/login');
 
     try {
-      http.Response response = await post(
-        uri: uri,
-        body: {"email": email, "password": password},
-      );
+      http.Response? response = await post(
+          uri: uri,
+          body: {"email": email, "password": password},
+          requireToken: false);
 
-      if (!(response.statusCode == 200)) {
-        ;
-        throw jsonDecode(response.body)["error_description"];
-      }
-      Object jsonData = jsonDecode(response.body);
+      Object jsonData = jsonDecode(response!.body);
 
       Tokens tokens = Tokens.fromJson(jsonData);
-      
+
       await tokens.localSave();
 
       return tokens;

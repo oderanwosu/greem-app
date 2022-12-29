@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greem/main.dart';
 import 'package:greem/screens/home.dart';
 
-import '../providers/providers.dart';
+import '../providers/auth_providers.dart';
 import 'login.dart';
 import 'register.dart';
 

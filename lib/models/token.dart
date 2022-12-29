@@ -33,12 +33,21 @@ class Tokens {
       var json = prefs.getString('tokens');
 
       if (json == null) return null;
+
       var tokens = Tokens.fromJson(jsonDecode(json));
+      refreshToken = tokens.refreshToken;
+      token = tokens.token;
 
       return tokens;
     } catch (e) {
       rethrow;
     }
+  }
+
+  setNewToken(String newToken) async {
+    token = newToken;
+
+    await localSave();
   }
 
   Stream<Tokens?> getlocalTokenStream() async* {

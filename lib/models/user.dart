@@ -11,7 +11,7 @@ class AppUser {
     required this.id,
     required this.email,
     required this.username,
-   this.greem,
+    this.greem,
     this.friends,
     this.conversations,
     this.createdAt,

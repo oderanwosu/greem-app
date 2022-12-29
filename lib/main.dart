@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greem/providers/providers.dart';
+import 'package:greem/providers/auth_providers.dart';
 import 'package:greem/screens/auth.dart';
 import 'package:greem/screens/home.dart';
 import 'package:greem/screens/register.dart';
 
-import 'providers/router_provider.dart';
+import 'providers/routes_provider.dart';
 import 'screens/login.dart';
 import 'widgets/forms/login.dart';
 import 'widgets/forms/register.dart';
@@ -74,7 +74,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    final authState = ref.watch(authStateProvider);
+    final initState = ref.watch(appInitializationProvider);
 
     Widget _buildApp() {
       return MaterialApp.router(
@@ -104,7 +104,7 @@ class MyApp extends ConsumerWidget {
       );
     }
 
-    return authState.when(
+    return initState.when(
         data: ((data) {
           return _buildApp();
         }),

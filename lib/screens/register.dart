@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/providers.dart';
+import '../providers/auth_providers.dart';
 import '../widgets/forms/register.dart';
 import '../widgets/snackbar.dart';
 
@@ -21,7 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         primary: true,
         child: Consumer(builder: ((context, ref, child) {
           final AsyncValue<void> state =
-              ref.watch(authScreenControllerProvider);
+              ref.watch(authControllerProvider);
           return SafeArea(
               child: Padding(
                   padding: const EdgeInsets.all(50.0),

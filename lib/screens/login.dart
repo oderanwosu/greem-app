@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/providers.dart';
+import '../providers/auth_providers.dart';
 import '../widgets/forms/login.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,14 +13,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer(
         builder: ((context, ref, child) {
-          final AsyncValue<void> state =
-              ref.watch(authScreenControllerProvider);
+          final AsyncValue<void> state = ref.watch(authControllerProvider);
           return SafeArea(
               child: Padding(
                   padding: const EdgeInsets.all(50.0),
