@@ -38,7 +38,7 @@ class APIService {
     try {
       http.Response response =
           await http.post(uri, body: jsonEncode(body), headers: headers);
-      if (response.statusCode != 200) {
+      if (response.statusCode != 200 && response.statusCode != 201) {
         if (jsonDecode(response.body)["error"] != 'invalid token') {
           throw jsonDecode(response.body)["error_description"];
         }
@@ -80,13 +80,16 @@ class APIService {
       http.Response response = await http.get(uri, headers: headers);
 
       if (response.statusCode != 200) {
+        print(
+            '${response.request} ${response.statusCode} ${jsonDecode(response.body)["error"]} ');
         if (jsonDecode(response.body)["error"] != 'invalid token') {
+          print('hi');
           throw jsonDecode(response.body)["error_description"];
         }
         await refreshToken();
         response = await get(uri: uri, requireToken: requireToken);
       }
-   
+
       return response;
     } catch (e) {
       rethrow;
@@ -100,11 +103,12 @@ class APIService {
           Uri.parse('http://localhost:4000/auth/new_token'),
           body: jsonEncode({"refreshToken": tokens!.refreshToken}),
           headers: headers);
-
-      if (jsonDecode(response.body)["error"] == 'invalid token') {
-        await ref.read(tokensProvider).deleteLocalTokens();
-        ref.read(routeRefreshProvider).refresh();
-        return;
+      if (response.statusCode != 200) {
+        if (jsonDecode(response.body)["error"] == 'invalid token') {
+          await ref.read(tokensProvider).deleteLocalTokens();
+          ref.read(routeRefreshProvider).refresh();
+          return;
+        }
       }
 
       await ref

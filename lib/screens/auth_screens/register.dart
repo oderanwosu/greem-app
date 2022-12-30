@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/auth_providers.dart';
-import '../widgets/forms/login.dart';
+import '../../providers/auth_providers.dart';
+import '../../widgets/forms/register.dart';
+import '../../widgets/snackbar.dart';
 
-class LoginScreen extends StatefulWidget {
+class RegisterScreen extends StatefulWidget {
   final Function toggleView;
-  LoginScreen({required this.toggleView});
+  RegisterScreen({required this.toggleView});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer(
-        builder: ((context, ref, child) {
-          final AsyncValue<void> state = ref.watch(authControllerProvider);
+      body: SingleChildScrollView(
+        primary: true,
+        child: Consumer(builder: ((context, ref, child) {
+          final AsyncValue<void> state =
+              ref.watch(authControllerProvider);
           return SafeArea(
               child: Padding(
                   padding: const EdgeInsets.all(50.0),
@@ -26,30 +29,30 @@ class _LoginScreenState extends State<LoginScreen> {
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            LoginForm(),
+                            RegisterForm(),
                             GestureDetector(
                               onTap: (() {
                                 widget.toggleView();
                               }),
                               child: RichText(
                                   text: TextSpan(
-                                      text: "Don't have an account? ",
+                                      text: "Already Have an account? ",
                                       style: TextStyle(
                                           color:
                                               Theme.of(context).disabledColor),
                                       children: [
                                     TextSpan(
-                                        text: 'Register',
+                                        text: 'Login',
                                         style: TextStyle(
                                             color:
                                                 Theme.of(context).primaryColor,
                                             fontWeight: FontWeight.bold))
                                   ])),
-                            )
+                            ),
                           ],
                         )
                       : const Center(child: CircularProgressIndicator())));
-        }),
+        })),
       ),
     );
   }

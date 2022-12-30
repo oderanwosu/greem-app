@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greem/providers/auth_providers.dart';
-import 'package:greem/screens/auth.dart';
-import 'package:greem/screens/home.dart';
-import 'package:greem/screens/register.dart';
+import 'package:greem/screens/auth_screens/auth.dart';
+import 'package:greem/screens/messages_screens.dart/conversations.dart';
+import 'package:greem/screens/auth_screens/register.dart';
 
 import 'providers/routes_provider.dart';
-import 'screens/login.dart';
+import 'screens/auth_screens/login.dart';
 import 'widgets/forms/login.dart';
 import 'widgets/forms/register.dart';
 
@@ -78,13 +78,10 @@ class MyApp extends ConsumerWidget {
 
     Widget _buildApp() {
       return MaterialApp.router(
-        routerConfig: router.router,
-        // routerConfig: RoutesToGoRouterAdapter(router.router, "/", redirect: router.routeRedirectPolicy).goRouter,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-      );
+          routerConfig: router.router,
+          // routerConfig: RoutesToGoRouterAdapter(router.router, "/", redirect: router.routeRedirectPolicy).goRouter,
+          title: 'Flutter Demo',
+          theme: ThemeData.dark());
     }
 
     Widget _LandingScreen() {

@@ -3,24 +3,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greem/providers/auth_providers.dart';
 import 'package:greem/providers/data_provider.dart';
 
-import '../models/conversations.dart';
-import '../models/token.dart';
+import '../../models/conversations.dart';
+import '../../models/token.dart';
 
-class HomeScreen extends ConsumerStatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+class ConversationsScreen extends ConsumerStatefulWidget {
+  ConversationsScreen({Key? key}) : super(key: key);
 
   @override
-  HomeScreenState createState() => HomeScreenState();
+  ConversationsScreenState createState() => ConversationsScreenState();
 }
 
-class HomeScreenState extends ConsumerState<HomeScreen> {
+class ConversationsScreenState extends ConsumerState<ConversationsScreen> {
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(conversationsDataProvider);
+    final state = ref.watch(conversationsDataControllerProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text('Conversation')),
-      body: SafeArea(
+      body: SingleChildScrollView(
           child: SafeArea(
               child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -59,25 +59,11 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                           error: (error, stackTrace) {
                             return Text(error.toString());
                           },
-                          loading: () => Center(
+                          loading: () => const Center(
                                 child: CircularProgressIndicator(),
                               ))
                     ],
                   )))),
     );
-  }
-}
-
-class ConversationsScreen extends StatefulWidget {
-  ConversationsScreen({Key? key}) : super(key: key);
-
-  @override
-  State<ConversationsScreen> createState() => _ConversationsScreenState();
-}
-
-class _ConversationsScreenState extends State<ConversationsScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

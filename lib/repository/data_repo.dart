@@ -13,15 +13,16 @@ class UserDataRepository extends APIService {
 
   UserDataRepository({super.tokens, required super.ref});
 
-  Future<AppUser?> getUser(String id) async {
-    Uri uri = Uri.parse('$_baseURL/$id');
+  Future<AppUser> getUser({String? id}) async {
+    Uri uri = id != null
+        ? Uri.parse('$_baseURL/users/?id=${id}')
+        : Uri.parse('$_baseURL/users/');
+
     try {
       http.Response response = await get(uri: uri, requireToken: true);
 
-      if (!(response.statusCode == 200)) {
-        throw jsonDecode(response.body)["error_description"];
-      }
       Object jsonData = jsonDecode(response.body);
+
       return AppUser.fromJson(jsonData);
     } catch (e) {
       rethrow;
@@ -34,13 +35,77 @@ class UserDataRepository extends APIService {
     try {
       http.Response response = await get(uri: uri, requireToken: true);
 
-      List<dynamic> jsonData = jsonDecode(response.body);
+      var jsonData = jsonDecode(response.body);
+
       List<Conversation?> conversations = [];
-      jsonData.forEach((conversation) {
+
+      jsonData['conversations'].forEach((conversation) {
         conversations.add(Conversation.fromJson(jsonData));
       });
 
       return conversations;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> addFriend(String greemCode) async {
+    Uri uri = Uri.parse('$_baseURL/friends/send');
+
+    try {
+      http.Response response =
+          await post(uri: uri, requireToken: true, body: {"greem": greemCode});
+      print(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<AppUser?>> getFriends() async {
+    Uri uri = Uri.parse('$_baseURL/friends/');
+
+    try {
+      http.Response response = await get(uri: uri, requireToken: true);
+
+      dynamic jsonData = jsonDecode(response.body);
+      print(jsonData);
+      List<AppUser?> friends = [];
+      jsonData['friends'].forEach((friend) {
+        var user = AppUser.fromJson(friend);
+        friends.add(user);
+      });
+
+      return friends;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<dynamic>> getFriendRequest() async {
+    try {
+      AppUser user = await getUser();
+
+      return user.friendRequest!;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> acceptFriendRequest(String id) async {
+    try {
+      Uri uri = Uri.parse('$_baseURL/friends/accept');
+      http.Response response =
+          await post(uri: uri, body: {"id": id}, requireToken: true);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> denyFriendRequest(String id) async {
+    try {
+      Uri uri = Uri.parse('$_baseURL/friends/deny');
+      http.Response response =
+          await post(uri: uri, body: {"id": id}, requireToken: true);
     } catch (e) {
       rethrow;
     }

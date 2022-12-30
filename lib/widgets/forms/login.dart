@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:greem/screens/home.dart';
+import 'package:greem/screens/messages_screens.dart/conversations.dart';
 
 import '../../providers/auth_providers.dart';
 

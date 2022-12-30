@@ -1,31 +1,32 @@
 class AppUser {
   String username;
-  String email;
+  String? email;
   String id;
   String? greem;
   List? friends;
   List? conversations;
-  DateTime? createdAt;
+  List<dynamic>? friendRequest;
+  int? createdAt;
 
-  AppUser({
-    required this.id,
-    required this.email,
-    required this.username,
-    this.greem,
-    this.friends,
-    this.conversations,
-    this.createdAt,
-  });
+  AppUser(
+      {required this.id,
+      required this.email,
+      required this.username,
+      this.greem,
+      this.friends,
+      this.conversations,
+      this.createdAt,
+      this.friendRequest});
   factory AppUser.fromJson(json) {
     return AppUser(
-      username: json['username'],
-      email: json['email'],
-      id: json['id'],
-      greem: json['greem'],
-      friends: json['friends'],
-      conversations: json['conversations'],
-      createdAt: json['createdAt'],
-    );
+        username: json['username'],
+        email: json['email'],
+        id: json['id'],
+        greem: json['greem'],
+        friends: json['friends'],
+        conversations: json['conversations'],
+        createdAt: json['createdAt'],
+        friendRequest: json['friend_requests']);
   }
 
   Map<String, dynamic> toJson() => {

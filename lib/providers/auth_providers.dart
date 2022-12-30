@@ -4,7 +4,7 @@ import 'package:greem/controllers/auth_controller.dart';
 import 'package:greem/models/token.dart';
 import 'package:greem/models/user.dart';
 import 'package:greem/repository/data_repo.dart';
-import 'package:greem/screens/login.dart';
+import 'package:greem/screens/auth_screens/login.dart';
 import 'package:riverpod/riverpod.dart';
 
 import '../controllers/auth_controller.dart';

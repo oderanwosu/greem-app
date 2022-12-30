@@ -11,18 +11,18 @@ class Conversation {
   bool private;
   List<String> memberIDs;
   List<Object> messageObects;
-  DateTime createdAt;
+  int createdAt;
 
-  Future<List<AppUser>> getMembers(Ref ref) async {
-    List<AppUser> members = [];
+  // Future<List<AppUser>> getMembers(Ref ref) async {
+  //   List<AppUser> members = [];
 
-    for (var memberId in memberIDs) {
-      AppUser? user = await ref.read(dataRepositoryProvider).getUser(memberId);
-      members.add(user!);
-    }
+  //   for (var memberId in memberIDs) {
+  //     AppUser? user = await ref.read(dataRepositoryProvider).getUser(memberId);
+  //     members.add(user!);
+  //   }
 
-    return members;
-  }
+  //   return members;
+  // }
 
   Conversation(
       {required this.id,
@@ -33,7 +33,6 @@ class Conversation {
       required this.createdAt});
 
   factory Conversation.fromJson(json) {
-   
     return Conversation(
         id: json['id'],
         private: json['private'],
