@@ -5,7 +5,6 @@ import 'package:greem/widgets/snackbar.dart';
 import '../../providers/auth_providers.dart';
 
 class RegisterForm extends StatefulWidget {
-
   RegisterForm();
 
   @override
@@ -18,8 +17,7 @@ class _RegisterFormState extends State<RegisterForm> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
-      final AsyncValue<void> state =
-          ref.watch(authControllerProvider);
+      final AsyncValue<void> state = ref.watch(authControllerProvider);
       return Form(
         key: _formKey,
         child: Center(
@@ -33,14 +31,12 @@ class _RegisterFormState extends State<RegisterForm> {
                 height: 60,
               ),
               TextFormField(
-                initialValue: ref
-                    .read(authControllerProvider.notifier)
-                    .username,
+                initialValue:
+                    ref.read(authControllerProvider.notifier).username,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), hintText: 'Enter username'),
                 onChanged: (val) {
-                  ref.read(authControllerProvider.notifier).username =
-                      val;
+                  ref.read(authControllerProvider.notifier).username = val;
                 },
                 validator: (value) {
                   if (value == '') {
@@ -52,13 +48,11 @@ class _RegisterFormState extends State<RegisterForm> {
                 height: 10,
               ),
               TextFormField(
-                initialValue:
-                    ref.read(authControllerProvider.notifier).email,
+                initialValue: ref.read(authControllerProvider.notifier).email,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), hintText: 'Enter email'),
                 onChanged: (val) {
-                  ref.read(authControllerProvider.notifier).email =
-                      val;
+                  ref.read(authControllerProvider.notifier).email = val;
                 },
                 validator: (value) {
                   if (value == '') {
@@ -70,17 +64,44 @@ class _RegisterFormState extends State<RegisterForm> {
                 height: 10,
               ),
               TextFormField(
-                initialValue: ref
-                    .read(authControllerProvider.notifier)
-                    .password,
+                initialValue: ref.read(authControllerProvider.notifier).fname,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), hintText: 'Enter first name'),
+                onChanged: (val) {
+                  ref.read(authControllerProvider.notifier).fname = val;
+                },
+                validator: (value) {
+                  if (value == '') {
+                    return 'first name cannot be left empty';
+                  }
+                },
+              ),
+              TextFormField(
+                initialValue: ref.read(authControllerProvider.notifier).lname,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), hintText: 'Enter last name'),
+                onChanged: (val) {
+                  ref.read(authControllerProvider.notifier).lname = val;
+                },
+                validator: (value) {
+                  if (value == '') {
+                    return 'email cannot be left empty';
+                  }
+                },
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextFormField(
+                initialValue:
+                    ref.read(authControllerProvider.notifier).password,
                 obscureText: true,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Enter password',
                 ),
                 onChanged: (val) {
-                  ref.read(authControllerProvider.notifier).password =
-                      val;
+                  ref.read(authControllerProvider.notifier).password = val;
                 },
                 validator: (value) {
                   if (value == '') {
@@ -92,18 +113,16 @@ class _RegisterFormState extends State<RegisterForm> {
                 height: 10,
               ),
               TextFormField(
-                initialValue: ref
-                    .read(authControllerProvider.notifier)
-                    .confirmPassword,
+                initialValue:
+                    ref.read(authControllerProvider.notifier).confirmPassword,
                 obscureText: true,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Re-enter password',
                 ),
                 onChanged: (val) {
-                  ref
-                      .read(authControllerProvider.notifier)
-                      .confirmPassword = val;
+                  ref.read(authControllerProvider.notifier).confirmPassword =
+                      val;
                 },
                 validator: (value) {
                   if (value == '') {
@@ -125,9 +144,7 @@ class _RegisterFormState extends State<RegisterForm> {
                           .read(authControllerProvider.notifier)
                           .register();
                     }
-                    if (!state.hasError) {
-                     
-                    }
+                    if (!state.hasError) {}
                   },
                   child: const Text('Register')),
               SizedBox(

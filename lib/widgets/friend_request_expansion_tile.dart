@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/user.dart';
 import '../providers/data_provider.dart';
 
 class FriendRequestExpansionTile extends ConsumerStatefulWidget {
@@ -18,7 +19,7 @@ class FriendRequestExpansionTileState
     final state = ref.watch(friendsDataControllerProvider);
     return state.when(
         data: ((data) {
-          List<dynamic> friendRequest = data!.friendRequest;
+          List<AppUser?> friendRequest = data!.friendRequests;
           return ExpansionTile(
               title: const Text(
                 "Friend Request",
@@ -40,26 +41,33 @@ class FriendRequestExpansionTileState
                                 ref
                                     .read(
                                         friendsDataControllerProvider.notifier)
-                                    .denyFriendRequest(friendRequest[index]);
+                                    .denyFriendRequest(
+                                        friendRequest[index]!.id);
                                 setState(() {
                                   friendRequest.removeAt(index);
                                 });
                               },
                               key: Key(index.toString()),
                               child: ListTile(
-                                leading: const CircleAvatar(
+                                leading: CircleAvatar(
                                   radius: 20,
                                   backgroundColor: Colors.grey,
+                                  backgroundImage: NetworkImage(
+                                      friendRequest[index]!.avatarURL!),
                                 ),
-                                title: Text(friendRequest[index]),
+                                subtitle: Text(friendRequest[index]!.username),
+                                title: Text(
+                                    '${friendRequest[index]!.fname!} ${friendRequest[index]!.lname!}'),
                                 trailing: IconButton(
-                                    onPressed: () async {
+                                    onPressed: () {
                                       ref
                                           .read(friendsDataControllerProvider
                                               .notifier)
                                           .acceptFriendRequest(
-                                              friendRequest[index]);
-                                      friendRequest.removeAt(index);
+                                              friendRequest[index]!.id);
+                                      setState(() {
+                                        friendRequest.removeAt(index);
+                                      });
                                     },
                                     icon: const Icon(Icons.add)),
                               ),

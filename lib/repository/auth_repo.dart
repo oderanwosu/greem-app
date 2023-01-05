@@ -12,18 +12,27 @@ class AuthRepository extends APIService {
 
   AuthRepository({super.tokens, required super.ref});
 
-  Future<dynamic> registerUser(
-      {required String? username,
-      required String? email,
-      required String? password}) async {
+  Future<dynamic> registerUser({
+    required String? username,
+    required String? email,
+    required String? password,
+    required String? fname,
+    required String? lname,
+  }) async {
     Uri uri = Uri.parse('$_baseAuthURL/register');
     try {
       http.Response? response = await post(
         uri: uri,
-        body: {"username": username, "email": email, "password": password},
+        body: {
+          "username": username,
+          "email": email,
+          "password": password,
+          "fname": fname,
+          "lname": lname
+        },
       );
 
-      Object jsonData = jsonDecode(response!.body);
+      Object jsonData = jsonDecode(response.body);
       return AuthUser.fromJson(jsonData);
     } catch (e) {
       rethrow;
@@ -40,11 +49,12 @@ class AuthRepository extends APIService {
           body: {"email": email, "password": password},
           requireToken: false);
 
-      Object jsonData = jsonDecode(response!.body);
+      Object jsonData = jsonDecode(response.body);
 
       Tokens tokens = Tokens.fromJson(jsonData);
 
       await tokens.localSave();
+     
 
       return tokens;
     } catch (e) {

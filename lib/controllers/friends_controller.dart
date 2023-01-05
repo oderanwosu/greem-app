@@ -23,19 +23,18 @@ class FriendsDataController
       () async {
         final friends = await ref.read(dataRepositoryProvider).getFriends();
 
-        final friendRequest =
-            await ref.read(dataRepositoryProvider).getFriendRequest();
+        final friendRequests =
+            await ref.read(dataRepositoryProvider).getFriendRequests();
+
         FriendsDataModel data =
-            FriendsDataModel(friends: friends, friendRequest: friendRequest);
+            FriendsDataModel(friends: friends, friendRequests: friendRequests);
 
         return data;
       },
     );
-    return null;
   }
 
   Future<void> acceptFriendRequest(String id) async {
-    state = const AsyncLoading();
     // password == confirmedPassword ? ;
     // call `authRepository.signInAnonymously` and await for the result
     state = await AsyncValue.guard(

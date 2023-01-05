@@ -20,6 +20,8 @@ class ConversationsScreenState extends ConsumerState<ConversationsScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text('Conversation')),
+      floatingActionButton:
+          FloatingActionButton(onPressed: () {}, child: const Icon(Icons.add)),
       body: SingleChildScrollView(
           child: SafeArea(
               child: Padding(
@@ -39,15 +41,16 @@ class ConversationsScreenState extends ConsumerState<ConversationsScreen> {
                                       return Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: ListTile(
-                                          leading: CircleAvatar(
-                                            radius: 20,
-                                            backgroundColor: Colors.grey,
-                                          ),
-                                          title: Text(conversation.id),
+                                          title: Text(conversation.name ?? ''),
                                           subtitle: Text(
-                                              'Dolor esse voluptate eu nulla.'),
+                                            conversation.latestMessage?.body ??
+                                                '',
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                           trailing: Text(
-                                            '2 days ago',
+                                            conversation.latestMessage
+                                                    ?.timeSentAgo ??
+                                                '',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodySmall,

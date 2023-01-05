@@ -20,8 +20,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: SingleChildScrollView(
         primary: true,
         child: Consumer(builder: ((context, ref, child) {
-          final AsyncValue<void> state =
-              ref.watch(authControllerProvider);
+          final AsyncValue<void> state = ref.watch(authControllerProvider);
           return SafeArea(
               child: Padding(
                   padding: const EdgeInsets.all(50.0),

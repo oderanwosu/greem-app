@@ -16,7 +16,8 @@ class AuthController extends StateNotifier<AsyncValue<void>> {
   String? username;
   String? password;
   String? confirmPassword;
-
+  String? lname;
+  String? fname;
   Future<void> register() async {
     // set the state to loading
     state = const AsyncLoading<void>();
@@ -28,7 +29,11 @@ class AuthController extends StateNotifier<AsyncValue<void>> {
         if (!(password == confirmPassword)) throw 'Passwords do not match';
 
         final response = await authRepository.registerUser(
-            email: email, username: username, password: password);
+            fname: fname,
+            lname: lname,
+            email: email,
+            username: username,
+            password: password);
         await login();
       },
     );
@@ -43,10 +48,10 @@ class AuthController extends StateNotifier<AsyncValue<void>> {
 
       ref.read(tokensProvider).token = tokens!.refreshToken;
       ref.read(tokensProvider).refreshToken = tokens.token;
+      ref.read(routeRefreshProvider).refresh();
 
       // ref.read(myNotifierProvider);
     });
-    ref.read(routeRefreshProvider).refresh();
   }
 
   Future<void> logout() async {

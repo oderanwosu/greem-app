@@ -57,7 +57,7 @@ class APIService {
     var headers = getHeader(requireToken);
     try {
       http.Response response =
-          await http.post(uri, body: jsonEncode(body), headers: headers);
+          await http.delete(uri, body: jsonEncode(body), headers: headers);
 
       if (response.statusCode != 204) {
         if (jsonDecode(response.body)["error"] != 'invalid token') {

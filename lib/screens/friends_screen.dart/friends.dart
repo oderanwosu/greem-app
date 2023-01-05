@@ -34,12 +34,16 @@ class MyFriendsScreenState extends ConsumerState<MyFriendsScreen> {
             )
           ],
         ),
-        body: SingleChildScrollView(
+        body: RefreshIndicator(
+          onRefresh: () async {
+            return await ref.refresh(friendsDataControllerProvider);
+          },
+          child: SingleChildScrollView(
             child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: state.when(
                     data: (data) {
-                      var friends = data!.friends;
+                      var friends = data?.friends;
                       return Column(
                         children: [
                           FriendRequestExpansionTile(),
@@ -47,16 +51,21 @@ class MyFriendsScreenState extends ConsumerState<MyFriendsScreen> {
                           SizedBox(
                               height: 700,
                               child: ListView.builder(
-                                  itemCount: friends.length,
+                                  itemCount: friends?.length,
                                   itemBuilder: ((context, index) {
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: ListTile(
-                                        leading: const CircleAvatar(
+                                        leading: CircleAvatar(
                                           radius: 20,
                                           backgroundColor: Colors.grey,
+                                          backgroundImage: NetworkImage(
+                                              friends?[index]?.avatarURL ?? ''),
                                         ),
-                                        title: Text(friends[index]!.username),
+                                        subtitle: Text(
+                                            friends?[index]?.username ?? ''),
+                                        title: Text(
+                                            '${friends?[index]!.fname!} ${friends?[index]!.lname!}'),
                                       ),
                                     );
                                   }))),
@@ -68,6 +77,8 @@ class MyFriendsScreenState extends ConsumerState<MyFriendsScreen> {
                     },
                     loading: () => const Center(
                           child: CircularProgressIndicator(),
-                        )))));
+                        ))),
+          ),
+        ));
   }
 }

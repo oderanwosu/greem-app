@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:greem/models/conversations.dart';
 import 'package:greem/utils/api.dart';
 
+import '../models/message.dart';
 import '../models/token.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,8 +16,8 @@ class UserDataRepository extends APIService {
 
   Future<AppUser> getUser({String? id}) async {
     Uri uri = id != null
-        ? Uri.parse('$_baseURL/users/?id=${id}')
-        : Uri.parse('$_baseURL/users/');
+        ? Uri.parse('$_baseURL/users?id=$id')
+        : Uri.parse('$_baseURL/users');
 
     try {
       http.Response response = await get(uri: uri, requireToken: true);
@@ -36,11 +37,18 @@ class UserDataRepository extends APIService {
       http.Response response = await get(uri: uri, requireToken: true);
 
       var jsonData = jsonDecode(response.body);
-
+      print(jsonData);
       List<Conversation?> conversations = [];
 
-      jsonData['conversations'].forEach((conversation) {
-        conversations.add(Conversation.fromJson(jsonData));
+      jsonData['conversations'].forEach((conversationJson) {
+        Conversation conversation = Conversation.fromJson(conversationJson);
+        List<Message?> messages = [];
+        for (var messageJson in conversationJson['messages']) {
+          messages.add(Message.fromJson(messageJson));
+        }
+
+        conversation.messages = messages;
+        conversations.add(conversation);
       });
 
       return conversations;
@@ -55,7 +63,6 @@ class UserDataRepository extends APIService {
     try {
       http.Response response =
           await post(uri: uri, requireToken: true, body: {"greem": greemCode});
-      print(response);
     } catch (e) {
       rethrow;
     }
@@ -68,7 +75,7 @@ class UserDataRepository extends APIService {
       http.Response response = await get(uri: uri, requireToken: true);
 
       dynamic jsonData = jsonDecode(response.body);
-      print(jsonData);
+
       List<AppUser?> friends = [];
       jsonData['friends'].forEach((friend) {
         var user = AppUser.fromJson(friend);
@@ -81,11 +88,18 @@ class UserDataRepository extends APIService {
     }
   }
 
-  Future<List<dynamic>> getFriendRequest() async {
+  Future<List<AppUser?>> getFriendRequests() async {
+    Uri uri = Uri.parse('$_baseURL/friends/request');
     try {
-      AppUser user = await getUser();
+      http.Response response = await get(uri: uri, requireToken: true);
+      List<AppUser?> friends = [];
+      List friendRequests = jsonDecode(response.body)["friendRequests"];
 
-      return user.friendRequest!;
+      for (var friend in friendRequests) {
+        AppUser user = AppUser.fromJson(friend);
+        friends.add(user);
+      }
+      return friends;
     } catch (e) {
       rethrow;
     }
@@ -105,7 +119,7 @@ class UserDataRepository extends APIService {
     try {
       Uri uri = Uri.parse('$_baseURL/friends/deny');
       http.Response response =
-          await post(uri: uri, body: {"id": id}, requireToken: true);
+          await delete(uri: uri, body: {"id": id}, requireToken: true);
     } catch (e) {
       rethrow;
     }

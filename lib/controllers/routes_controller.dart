@@ -8,6 +8,7 @@ import 'package:riverpod/riverpod.dart';
 import '../providers/auth_providers.dart';
 import '../providers/routes_provider.dart';
 import '../screens/auth_screens/auth.dart';
+import '../screens/messages_screens.dart/conversation.dart';
 import '../screens/messages_screens.dart/conversations.dart';
 
 class RouterController extends StateNotifier {
@@ -48,6 +49,10 @@ class RouterController extends StateNotifier {
     GoRoute(
       path: "/auth",
       builder: (context, state) => AuthScreen(),
+    ),
+    GoRoute(
+      path: "/conversation",
+      builder: (context, state) => ConversationScreen(),
     )
   ];
 

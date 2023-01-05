@@ -1,9 +1,13 @@
 class AppUser {
   String username;
+  String? lname;
+  String? fname;
   String? email;
+  String? avatarURL;
   String id;
   String? greem;
   List? friends;
+
   List? conversations;
   List<dynamic>? friendRequest;
   int? createdAt;
@@ -12,6 +16,9 @@ class AppUser {
       {required this.id,
       required this.email,
       required this.username,
+      this.avatarURL,
+      this.fname,
+      this.lname,
       this.greem,
       this.friends,
       this.conversations,
@@ -19,6 +26,9 @@ class AppUser {
       this.friendRequest});
   factory AppUser.fromJson(json) {
     return AppUser(
+        fname: json['fname'],
+        avatarURL: json['avatar'],
+        lname: json['lname'],
         username: json['username'],
         email: json['email'],
         id: json['id'],
