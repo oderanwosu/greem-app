@@ -36,13 +36,12 @@ class UserDataRepository extends APIService {
     try {
       http.Response response = await get(uri: uri, requireToken: true);
 
-      var jsonData = jsonDecode(response.body);
-      print(jsonData);
       List<Conversation?> conversations = [];
 
-      jsonData['conversations'].forEach((conversationJson) {
+      jsonDecode(response.body)['conversations'].forEach((conversationJson) {
         Conversation conversation = Conversation.fromJson(conversationJson);
         List<Message?> messages = [];
+
         for (var messageJson in conversationJson['messages']) {
           messages.add(Message.fromJson(messageJson));
         }
@@ -52,6 +51,38 @@ class UserDataRepository extends APIService {
       });
 
       return conversations;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Conversation?> getConversation(String convoID) async {
+    Uri uri = Uri.parse('$_baseURL/conversations/${convoID}');
+    try {
+      http.Response response = await get(uri: uri, requireToken: true);
+      var jsonData = jsonDecode(response.body)['conversation'];
+      print(jsonData);
+      List<Message?> messages = [];
+      Conversation conversation = Conversation.fromJson(jsonData);
+      for (var messageJson in jsonData['messages']) {
+        var newMessage = Message.fromJson(messageJson);
+        newMessage.sender = await getUser(id: newMessage.senderID);
+
+        messages.add(newMessage);
+      }
+
+      conversation.messages = messages;
+      return conversation;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> sendMessage(String body, String convoID) async {
+    Uri uri = Uri.parse('$_baseURL/conversations/${convoID}/send_message');
+    try {
+      http.Response reasponse =
+          await post(body: {"body": body}, uri: uri, requireToken: true);
     } catch (e) {
       rethrow;
     }

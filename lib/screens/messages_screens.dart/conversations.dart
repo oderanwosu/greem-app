@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greem/providers/auth_providers.dart';
 import 'package:greem/providers/data_provider.dart';
 
@@ -40,20 +41,34 @@ class ConversationsScreenState extends ConsumerState<ConversationsScreen> {
                                           conversations[index]!;
                                       return Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: ListTile(
-                                          title: Text(conversation.name ?? ''),
-                                          subtitle: Text(
-                                            conversation.latestMessage?.body ??
-                                                '',
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          trailing: Text(
-                                            conversation.latestMessage
-                                                    ?.timeSentAgo ??
-                                                '',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            ref
+                                                .read(conversationIDprovider
+                                                    .notifier)
+                                                .state = conversation.id;
+                                            return context.pushNamed(
+                                              'conversation',
+                                              params: {"id": conversation.id},
+                                            );
+                                          },
+                                          child: ListTile(
+                                            title:
+                                                Text(conversation.name ?? ''),
+                                            subtitle: Text(
+                                              conversation
+                                                      .latestMessage?.body ??
+                                                  '',
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            trailing: Text(
+                                              conversation.latestMessage
+                                                      ?.timeSentAgo ??
+                                                  '',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall,
+                                            ),
                                           ),
                                         ),
                                       );

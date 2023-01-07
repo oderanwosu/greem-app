@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greem/screens/dashboard.dart';
 import 'package:greem/screens/friends_screen.dart/add_friend.dart';
@@ -11,8 +12,12 @@ import '../screens/auth_screens/auth.dart';
 import '../screens/messages_screens.dart/conversation.dart';
 import '../screens/messages_screens.dart/conversations.dart';
 
+final rootNavigatorKey = GlobalKey<NavigatorState>();
+final shellNavigatorKey = GlobalKey<NavigatorState>();
+
 class RouterController extends StateNotifier {
   Ref ref;
+
   final List<RouteBase> _routeRegistry = [
     ShellRoute(
         navigatorKey: shellNavigatorKey,
@@ -21,18 +26,21 @@ class RouterController extends StateNotifier {
         },
         routes: <GoRoute>[
           GoRoute(
+            parentNavigatorKey: shellNavigatorKey,
             path: '/conversations',
             pageBuilder: (context, state) => NoTransitionPage(
               child: ConversationsScreen(),
             ),
           ),
           GoRoute(
+              parentNavigatorKey: shellNavigatorKey,
               path: '/friends',
               pageBuilder: (context, state) => NoTransitionPage(
                     child: MyFriendsScreen(),
                   ),
               routes: [
                 GoRoute(
+                  parentNavigatorKey: shellNavigatorKey,
                   path: 'add',
                   pageBuilder: (context, state) => NoTransitionPage(
                     child: AddFriendScreen(),
@@ -40,6 +48,7 @@ class RouterController extends StateNotifier {
                 )
               ]),
           GoRoute(
+            parentNavigatorKey: shellNavigatorKey,
             path: '/settings',
             pageBuilder: (context, state) => NoTransitionPage(
               child: SettingsScreen(),
@@ -48,11 +57,14 @@ class RouterController extends StateNotifier {
         ]),
     GoRoute(
       path: "/auth",
+      parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) => AuthScreen(),
     ),
     GoRoute(
-      path: "/conversation",
-      builder: (context, state) => ConversationScreen(),
+      name: "conversation",
+      parentNavigatorKey: rootNavigatorKey,
+      path: "/conversation/:id",
+      builder: (context, state) => ConversationScreen(id: state.params["id"]!),
     )
   ];
 
@@ -60,6 +72,7 @@ class RouterController extends StateNotifier {
 
   GoRouter get router => GoRouter(
         initialLocation: '/conversations',
+        navigatorKey: rootNavigatorKey,
         refreshListenable: ref.read(routeRefreshProvider),
         routes: _routeRegistry,
         redirect: (context, state) => routeRedirectPolicy(context, state),

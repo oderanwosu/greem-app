@@ -1,8 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:greem/controllers/conversation_controller.dart';
+import 'package:greem/controllers/conversations_controller.dart';
 import 'package:greem/models/friends.dart';
 import 'package:greem/repository/data_repo.dart';
 
+import '../controllers/conversation_controller.dart';
 import '../controllers/friends_controller.dart';
 import '../models/conversations.dart';
 import 'auth_providers.dart';
@@ -16,6 +17,12 @@ final conversationsDataControllerProvider = StateNotifierProvider<
     ConversationsDataController, AsyncValue<List<Conversation?>>>((ref) {
   return ConversationsDataController(ref: ref);
 });
+
+final conversationDataControllerProvider = StateNotifierProvider<
+    ConversationDataController, AsyncValue<void>>((ref) {
+  return ConversationDataController(ref: ref);
+});
+final conversationIDprovider = StateProvider<String>(((ref) => ''));
 
 final friendsDataControllerProvider =
     StateNotifierProvider<FriendsDataController, AsyncValue<FriendsDataModel?>>(

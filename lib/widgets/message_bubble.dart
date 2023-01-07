@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 class MessageBubble extends StatefulWidget {
   final String text;
   final bool isCurrentUser;
-  MessageBubble({required this.text, required this.isCurrentUser});
+  final String username;
+  MessageBubble(
+      {required this.text,
+      required this.isCurrentUser,
+      required this.username});
 
   @override
   State<MessageBubble> createState() => _MessageBubbleState();
@@ -23,20 +27,35 @@ class _MessageBubbleState extends State<MessageBubble> {
           alignment: widget.isCurrentUser
               ? Alignment.centerRight
               : Alignment.centerLeft,
-          child: Container(
-            decoration: BoxDecoration(
-              color: widget.isCurrentUser ? Colors.blue : Colors.grey[300],
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                widget.text,
-                style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    color:
-                        widget.isCurrentUser ? Colors.white : Colors.black87),
+          child: Column(
+            crossAxisAlignment: widget.isCurrentUser
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.username,
+                style: Theme.of(context).textTheme.caption,
               ),
-            ),
+              SizedBox(
+                height: 4,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: widget.isCurrentUser ? Colors.blue : Colors.grey[300],
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    widget.text,
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                        color: widget.isCurrentUser
+                            ? Colors.white
+                            : Colors.black87),
+                  ),
+                ),
+              ),
+            ],
           ),
         ));
   }

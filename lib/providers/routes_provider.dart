@@ -13,8 +13,7 @@ import 'package:riverpod/riverpod.dart';
 
 import '../controllers/routes_controller.dart';
 
-final rootNavigatorKey = GlobalKey<NavigatorState>();
-final shellNavigatorKey = GlobalKey<NavigatorState>();
+
 
 final routerProvider = Provider<RouterController>((ref) {
   return RouterController(ref: ref);

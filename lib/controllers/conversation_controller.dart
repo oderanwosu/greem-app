@@ -1,28 +1,38 @@
-import 'package:greem/providers/auth_providers.dart';
-import 'package:greem/providers/data_provider.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/conversations.dart';
+import '../providers/data_provider.dart';
 
-class ConversationsDataController
-    extends StateNotifier<AsyncValue<List<Conversation?>>> {
+class ConversationDataController extends StateNotifier<AsyncValue<void>> {
   Ref ref;
+  Conversation? conversation;
+  String? body;
 
-  ConversationsDataController({required this.ref})
-      : super(const AsyncData<List<Conversation?>>([])) {
-    getConversations();
+  ConversationDataController({required this.ref})
+      : super(const AsyncData<void>(null)) {
+    getConversation(ref.watch(conversationIDprovider));
   }
 
-  Future<List<Conversation?>?> getConversations() async {
+  Future<void> sendMessage() async {
+    state = await AsyncValue.guard(
+      () async {
+        final response = await ref
+            .read(dataRepositoryProvider)
+            .sendMessage(body ?? '', conversation?.id ?? '');
+      },
+    );
+  }
+
+  Future<void> getConversation(id) async {
     state = const AsyncLoading();
 
     // password == confirmedPassword ? ;
     // call `authRepository.signInAnonymously` and await for the result
     state = await AsyncValue.guard(
       () async {
-        final response = await ref.read(dataRepositoryProvider).conversations;
-
-        return response;
+        final response =
+            await ref.read(dataRepositoryProvider).getConversation(id);
+        conversation = response;
       },
     );
   }

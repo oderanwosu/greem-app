@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:greem/providers/data_provider.dart';
 
+import '../../models/message.dart';
 import '../../widgets/message_bubble.dart';
 
 class ConversationScreen extends ConsumerStatefulWidget {
-  ConversationScreen({Key? key}) : super(key: key);
+  String id;
+  ConversationScreen({required this.id});
 
   @override
   ConversationScreenState createState() => ConversationScreenState();
@@ -13,24 +16,60 @@ class ConversationScreen extends ConsumerStatefulWidget {
 class ConversationScreenState extends ConsumerState<ConversationScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text('_username')), body: MessageList());
+    var state = ref.watch(conversationDataControllerProvider);
+
+    return !state.isLoading
+        ? Scaffold(
+            appBar: AppBar(
+                title: Text(ref
+                        .watch(conversationDataControllerProvider.notifier)
+                        .conversation
+                        ?.name ??
+                    'Messages')),
+            body: MessageList(
+                messages: ref
+                        .watch(conversationDataControllerProvider.notifier)
+                        .conversation
+                        ?.messages ??
+                    []))
+        : Scaffold(
+            body: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+
+    // state.when(
+    //     skipLoadingOnReload: true,
+    //     data: (conversation) {
+    //       return Scaffold(
+    //           appBar: AppBar(title: Text(conversation?.name ?? 'Messages')),
+    //           body: MessageList(messages: conversation?.messages ?? []));
+    //     },
+    //     loading: () => Scaffold(
+    //           body: const Center(
+    //             child: CircularProgressIndicator(),
+    //           ),
+    //         ),
+    //     error: ((error, stackTrace) => Scaffold(
+    //           body: Text(error.toString()),
+    //         )));
   }
 }
 
 class MessageList extends ConsumerStatefulWidget {
-  MessageList({Key? key}) : super(key: key);
+  final List<Message?> messages;
+
+  MessageList({required this.messages});
 
   @override
   MessageListState createState() => MessageListState();
 }
 
 class MessageListState extends ConsumerState<MessageList> {
-    _buildMessageComposer() {
+  _buildMessageComposer() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0),
       height: 70.0,
-      color: Colors.white,
       child: Row(
         children: <Widget>[
           IconButton(
@@ -40,9 +79,12 @@ class MessageListState extends ConsumerState<MessageList> {
             onPressed: () {},
           ),
           Expanded(
-            child: TextField(
+            child: TextFormField(
               textCapitalization: TextCapitalization.sentences,
-              onChanged: (value) {},
+              onChanged: (value) {
+                ref.watch(conversationDataControllerProvider.notifier).body =
+                    value;
+              },
               decoration: InputDecoration.collapsed(
                 hintText: 'Send a message...',
               ),
@@ -52,7 +94,11 @@ class MessageListState extends ConsumerState<MessageList> {
             icon: Icon(Icons.send),
             iconSize: 25.0,
             color: Theme.of(context).primaryColor,
-            onPressed: () {},
+            onPressed: () async {
+              await ref
+                  .watch(conversationDataControllerProvider.notifier)
+                  .sendMessage();
+            },
           ),
         ],
       ),
@@ -67,9 +113,17 @@ class MessageListState extends ConsumerState<MessageList> {
         body: CustomScrollView(
           slivers: <Widget>[
             SliverList(
-                delegate: SliverChildBuilderDelegate(childCount: 10,
-                    ((context, index) {
-              return MessageBubble(text: 'hey whats up?', isCurrentUser: true);
+                delegate: SliverChildBuilderDelegate(
+                    childCount: widget.messages.length, ((context, index) {
+              var message = widget.messages[index];
+
+              return Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: MessageBubble(
+                    username: message?.sender?.username ?? '',
+                    text: message?.body ?? '',
+                    isCurrentUser: message?.isFromUser ?? false),
+              );
             }))),
           ],
         ),
