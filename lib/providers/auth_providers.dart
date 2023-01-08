@@ -9,6 +9,7 @@ import 'package:riverpod/riverpod.dart';
 
 import '../controllers/auth_controller.dart';
 import '../repository/auth_repo.dart';
+import 'web_socket_provider.dart';
 
 final tokensProvider = StateProvider<Tokens>((ref) {
   return Tokens();
@@ -25,5 +26,7 @@ final authControllerProvider =
 });
 
 final appInitializationProvider = StreamProvider<Tokens?>((ref) {
+ 
+
   return ref.watch(tokensProvider).getlocalTokenStream();
 });

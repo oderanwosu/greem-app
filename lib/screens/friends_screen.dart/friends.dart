@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greem/widgets/friend_request_expansion_tile.dart';
 
-import '../../models/conversations.dart';
+import '../../models/conversation.dart';
 import '../../providers/data_provider.dart';
 
 class MyFriendsScreen extends ConsumerStatefulWidget {

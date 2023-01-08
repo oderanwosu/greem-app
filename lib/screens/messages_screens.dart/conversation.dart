@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greem/providers/data_provider.dart';
+import 'package:greem/providers/web_socket_provider.dart';
 
 import '../../models/message.dart';
 import '../../widgets/message_bubble.dart';
@@ -22,13 +23,13 @@ class ConversationScreenState extends ConsumerState<ConversationScreen> {
         ? Scaffold(
             appBar: AppBar(
                 title: Text(ref
-                        .watch(conversationDataControllerProvider.notifier)
+                        .read(conversationDataControllerProvider.notifier)
                         .conversation
                         ?.name ??
                     'Messages')),
             body: MessageList(
                 messages: ref
-                        .watch(conversationDataControllerProvider.notifier)
+                        .read(conversationDataControllerProvider.notifier)
                         .conversation
                         ?.messages ??
                     []))

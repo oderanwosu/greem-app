@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:greem/providers/auth_providers.dart';
 import 'package:greem/providers/data_provider.dart';
 
-import '../../models/conversations.dart';
+import '../../models/conversation.dart';
 import '../../models/token.dart';
 
 class ConversationsScreen extends ConsumerStatefulWidget {

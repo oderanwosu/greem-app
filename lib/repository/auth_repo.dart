@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:greem/models/token.dart';
 import 'package:greem/models/user.dart';
-import 'package:greem/utils/api.dart';
+import 'package:greem/services/api.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRepository extends APIService {

@@ -6,12 +6,13 @@ import 'message.dart';
 import 'user.dart';
 
 class Conversation {
+  String? userID;
   String id;
   String? name;
   String? adminID;
   bool private;
   List<dynamic> memberIDs;
-  List<Message?>? messages = [];
+  List<Message?> messages = [];
   int createdAt;
 
   // Future<List<AppUser>> getMembers(Ref ref) async {
@@ -26,13 +27,12 @@ class Conversation {
   // }
 
   Message? get latestMessage {
-    var reverseMessages = messages?.reversed;
-
-    return reverseMessages?.first;
+    return messages.isEmpty ? null : messages[messages.length - 1];
   }
 
   Conversation(
-      {required this.id,
+      {this.userID,
+      required this.id,
       this.adminID,
       this.name,
       required this.private,
@@ -41,6 +41,7 @@ class Conversation {
 
   factory Conversation.fromJson(json) {
     return Conversation(
+        userID: json['user_id'],
         id: json['id'],
         name: json['name'],
         private: json['private'],

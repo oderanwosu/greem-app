@@ -5,7 +5,7 @@ import 'package:greem/repository/data_repo.dart';
 
 import '../controllers/conversation_controller.dart';
 import '../controllers/friends_controller.dart';
-import '../models/conversations.dart';
+import '../models/conversation.dart';
 import 'auth_providers.dart';
 
 final dataRepositoryProvider = Provider<UserDataRepository>((ref) {

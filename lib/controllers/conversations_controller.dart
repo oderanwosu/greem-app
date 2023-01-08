@@ -2,7 +2,8 @@ import 'package:greem/providers/auth_providers.dart';
 import 'package:greem/providers/data_provider.dart';
 import 'package:riverpod/riverpod.dart';
 
-import '../models/conversations.dart';
+import '../models/conversation.dart';
+import '../providers/web_socket_provider.dart';
 
 class ConversationsDataController
     extends StateNotifier<AsyncValue<List<Conversation?>>> {
@@ -25,7 +26,12 @@ class ConversationsDataController
         return response;
       },
     );
+
+    ref.watch(messageWSStreamProvider.stream).listen((event) async {
+      state = await AsyncValue.guard(() async {
+        final response = await ref.read(dataRepositoryProvider).conversations;
+        return response;
+      });
+    });
   }
 }
-
-
