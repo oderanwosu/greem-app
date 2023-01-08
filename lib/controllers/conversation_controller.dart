@@ -56,9 +56,9 @@ class ConversationDataController extends StateNotifier<AsyncValue<void>> {
               .getUser(id: message.senderID);
           conversation?.messages.add(message);
           // alternatively I can just get a new http request of the messages
-          var response =
-              await ref.read(dataRepositoryProvider).getConversation(id);
-          conversation = response;
+          // var response =
+          //     await ref.read(dataRepositoryProvider).getConversation(id);
+          // conversation = response;
         },
       );
     });
