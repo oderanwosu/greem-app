@@ -20,13 +20,11 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 });
 
 final authControllerProvider =
-    StateNotifierProvider.autoDispose<AuthController, AsyncValue<void>>((ref) {
+    StateNotifierProvider<AuthController, AsyncValue<void>>((ref) {
   return AuthController(
       authRepository: ref.read(authRepositoryProvider), ref: ref);
 });
 
 final appInitializationProvider = StreamProvider<Tokens?>((ref) {
- 
-
   return ref.watch(tokensProvider).getlocalTokenStream();
 });

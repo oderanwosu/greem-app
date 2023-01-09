@@ -47,14 +47,14 @@ class AuthRepository extends APIService {
       http.Response? response = await post(
           uri: uri,
           body: {"email": email, "password": password},
-          requireToken: false);
+          requireToken: false,
+          isLogin: true);
 
       Object jsonData = jsonDecode(response.body);
 
       Tokens tokens = Tokens.fromJson(jsonData);
 
       await tokens.localSave();
-     
 
       return tokens;
     } catch (e) {

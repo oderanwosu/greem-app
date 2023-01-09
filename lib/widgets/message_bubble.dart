@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../models/message.dart';
+
 class MessageBubble extends StatefulWidget {
-  final String text;
-  final bool isCurrentUser;
-  final String username;
-  MessageBubble(
-      {required this.text,
-      required this.isCurrentUser,
-      required this.username});
+  Message message;
+  final bool showUsername;
+
+  MessageBubble({required this.showUsername, required this.message});
 
   @override
   State<MessageBubble> createState() => _MessageBubbleState();
@@ -18,43 +17,53 @@ class _MessageBubbleState extends State<MessageBubble> {
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.fromLTRB(
-          widget.isCurrentUser ? 64.0 : 16.0,
+          widget.message.isFromUser ?? false ? 64.0 : 16.0,
           4,
-          widget.isCurrentUser ? 16.0 : 64.0,
+          widget.message.isFromUser ?? false ? 16.0 : 64.0,
           4,
         ),
         child: Align(
-          alignment: widget.isCurrentUser
+          alignment: widget.message.isFromUser ?? false
               ? Alignment.centerRight
               : Alignment.centerLeft,
           child: Column(
-            crossAxisAlignment: widget.isCurrentUser
+            crossAxisAlignment: widget.message.isFromUser ?? false
                 ? CrossAxisAlignment.end
                 : CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.username,
-                style: Theme.of(context).textTheme.caption,
-              ),
+              widget.showUsername
+                  ? Text(
+                      widget.message.sender?.username ?? '',
+                      style: Theme.of(context).textTheme.caption,
+                    )
+                  : Container(),
               SizedBox(
-                height: 4,
+                height: widget.showUsername ? 4 : 0,
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: widget.isCurrentUser ? Colors.blue : Colors.grey[300],
+                  color: widget.message.isFromUser ?? false
+                      ? Colors.blue
+                      : Colors.grey[300],
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    widget.text,
+                    widget.message.body,
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        color: widget.isCurrentUser
+                        color: widget.message.isFromUser ?? false
                             ? Colors.white
                             : Colors.black87),
                   ),
                 ),
               ),
+              // widget.showUsername
+              //     ? Text(
+              //         widget.message.timeSent,
+              //         style: Theme.of(context).textTheme.caption,
+              //       )
+              //     : Container(),
             ],
           ),
         ));

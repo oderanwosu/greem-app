@@ -46,12 +46,12 @@ class AuthController extends StateNotifier<AsyncValue<void>> {
       Tokens? tokens =
           await authRepository.loginUser(email: email!, password: password!);
 
-      ref.read(tokensProvider).token = tokens!.refreshToken;
-      ref.read(tokensProvider).refreshToken = tokens.token;
-      ref.read(routeRefreshProvider).refresh();
+      ref.watch(tokensProvider).token = tokens!.token;
+      ref.watch(tokensProvider).refreshToken = tokens.refreshToken;
 
       // ref.read(myNotifierProvider);
     });
+    ref.watch(routeRefreshProvider).refresh();
   }
 
   Future<void> logout() async {

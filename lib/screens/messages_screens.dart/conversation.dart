@@ -81,6 +81,9 @@ class MessageListState extends ConsumerState<MessageList> {
           ),
           Expanded(
             child: TextFormField(
+              controller: ref
+                  .read(conversationDataControllerProvider.notifier)
+                  .bodyTextController,
               textCapitalization: TextCapitalization.sentences,
               onChanged: (value) {
                 ref.watch(conversationDataControllerProvider.notifier).body =
@@ -94,7 +97,7 @@ class MessageListState extends ConsumerState<MessageList> {
           IconButton(
             icon: Icon(Icons.send),
             iconSize: 25.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).disabledColor,
             onPressed: () async {
               await ref
                   .watch(conversationDataControllerProvider.notifier)
@@ -115,17 +118,12 @@ class MessageListState extends ConsumerState<MessageList> {
           slivers: <Widget>[
             SliverList(
                 delegate: SliverChildBuilderDelegate(
-                    childCount: widget.messages.length, ((context, index) {
-              var message = widget.messages[index];
 
-              return Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: MessageBubble(
-                    username: message?.sender?.username ?? '',
-                    text: message?.body ?? '',
-                    isCurrentUser: message?.isFromUser ?? false),
-              );
-            }))),
+                    // ref.read(conversationDataControllerProvider.notifier).buildMessageList(context, index)
+                    childCount: widget.messages.length,
+                    (ref
+                        .read(conversationDataControllerProvider.notifier)
+                        .buildMessageList))),
           ],
         ),
         bottomNavigationBar: _buildMessageComposer(),

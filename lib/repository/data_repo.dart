@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:greem/models/conversation.dart';
+import 'package:greem/providers/auth_providers.dart';
 import 'package:greem/services/api.dart';
 
 import '../models/message.dart';
@@ -37,7 +38,7 @@ class UserDataRepository extends APIService {
       http.Response response = await get(uri: uri, requireToken: true);
 
       List<Conversation?> conversations = [];
-      
+
       jsonDecode(response.body)['conversations'].forEach((conversationJson) {
         Conversation conversation = Conversation.fromJson(conversationJson);
         List<Message?> messages = [];
@@ -63,7 +64,7 @@ class UserDataRepository extends APIService {
       var jsonData = jsonDecode(response.body)['conversation'];
 
       List<Message?> messages = [];
-   
+
       Conversation conversation = Conversation.fromJson(jsonData);
       for (var messageJson in jsonData['messages']) {
         var newMessage = Message.fromJson(messageJson);

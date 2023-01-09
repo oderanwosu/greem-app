@@ -18,7 +18,7 @@ final conversationsDataControllerProvider = StateNotifierProvider<
   return ConversationsDataController(ref: ref);
 });
 
-final conversationDataControllerProvider = StateNotifierProvider<
+final conversationDataControllerProvider = StateNotifierProvider.autoDispose<
     ConversationDataController, AsyncValue<void>>((ref) {
   return ConversationDataController(ref: ref);
 });

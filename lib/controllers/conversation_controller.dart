@@ -1,16 +1,19 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:greem/models/message.dart';
 import 'package:greem/providers/web_socket_provider.dart';
 
 import '../models/conversation.dart';
 import '../providers/data_provider.dart';
+import '../widgets/message_bubble.dart';
 
 class ConversationDataController extends StateNotifier<AsyncValue<void>> {
   Ref ref;
   Conversation? conversation;
   String? body;
+  TextEditingController bodyTextController = TextEditingController();
 
   ConversationDataController({required this.ref})
       : super(const AsyncData<void>(null)) {
@@ -20,6 +23,7 @@ class ConversationDataController extends StateNotifier<AsyncValue<void>> {
   Future<void> sendMessage() async {
     state = await AsyncValue.guard(
       () async {
+        bodyTextController.clear();
         final response = await ref
             .read(dataRepositoryProvider)
             .sendMessage(body ?? '', conversation?.id ?? '');
@@ -62,6 +66,24 @@ class ConversationDataController extends StateNotifier<AsyncValue<void>> {
         },
       );
     });
+  }
+
+  Widget buildMessageList(context, index) {
+    var message = conversation?.messages[index];
+    var showUsername = true;
+    if (index > 1) {
+      if (message?.senderID == conversation?.messages[index - 1]?.senderID) {
+        showUsername = false;
+      }
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: MessageBubble(
+        showUsername: showUsername,
+        message: message!,
+      ),
+    );
   }
 }
 

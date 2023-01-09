@@ -13,8 +13,6 @@ import 'package:riverpod/riverpod.dart';
 
 import '../controllers/routes_controller.dart';
 
-
-
 final routerProvider = Provider<RouterController>((ref) {
   return RouterController(ref: ref);
 });

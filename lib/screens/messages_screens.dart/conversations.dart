@@ -21,8 +21,8 @@ class ConversationsScreenState extends ConsumerState<ConversationsScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text('Conversation')),
-      floatingActionButton:
-          FloatingActionButton(onPressed: () {}, child: const Icon(Icons.add)),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {}, child: const Icon(Icons.mode_edit_sharp)),
       body: SingleChildScrollView(
           child: SafeArea(
               child: Padding(

@@ -10,8 +10,7 @@ class Message {
   AppUser? sender;
 
   Message(
-      {
-      this.isFromUser,
+      {this.isFromUser,
       this.sender,
       required this.id,
       required this.senderID,
@@ -20,7 +19,7 @@ class Message {
 
   factory Message.fromJson(json) {
     return Message(
-      isFromUser: json["fromUser"],
+        isFromUser: json["fromUser"],
         id: json['id'],
         senderID: json['sender_id'],
         body: json['body'],
@@ -29,5 +28,10 @@ class Message {
 
   String get timeSentAgo {
     return timeago.format(sentAt);
+  }
+
+  String get timeSent {
+    String meridiem = sentAt.hour > 23 ? 'p.m' : 'a.m';
+    return '${sentAt.hour}:${sentAt.minute}';
   }
 }

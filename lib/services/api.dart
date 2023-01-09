@@ -18,32 +18,37 @@ class APIService {
     return false;
   }
 
-  getHeader(bool? requireToken) {
+  getHeader(bool? requireToken, {String? myToken}) {
     var headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     };
 
     requireToken != null && requireToken == true
         ? headers.putIfAbsent(HttpHeaders.authorizationHeader,
-            () => 'Bearer ${ref.watch(tokensProvider).token!}')
+            () => 'Bearer ${ref.read(tokensProvider).token}')
         : null;
 
     return headers;
   }
 
   Future<http.Response> post(
-      {required uri, required Object body, bool? requireToken}) async {
+      {required uri,
+      required Object body,
+      bool? requireToken,
+      bool? isLogin}) async {
     var headers = getHeader(requireToken);
 
     try {
       http.Response response =
           await http.post(uri, body: jsonEncode(body), headers: headers);
+
       if (response.statusCode != 200 && response.statusCode != 201) {
         if (jsonDecode(response.body)["error"] != 'invalid token') {
           throw jsonDecode(response.body)["error_description"];
         }
-        await refreshToken();
-        response = await post(uri: uri, body: body, requireToken: requireToken);
+        isLogin == true ? null : await refreshToken();
+        response = await post(
+            uri: uri, body: body, requireToken: requireToken, isLogin: isLogin);
       }
 
       return response;
@@ -79,6 +84,7 @@ class APIService {
     try {
       http.Response response = await http.get(uri, headers: headers);
 
+      // print("From refresh: ${ref.read(tokensProvider).refreshToken}");
       if (response.statusCode != 200) {
         print(
             '${response.request} ${response.statusCode} ${jsonDecode(response.body)["error"]} ');
@@ -98,11 +104,14 @@ class APIService {
 
   Future<void> refreshToken() async {
     var headers = await getHeader(false);
+
     try {
       http.Response response = await http.post(
           Uri.parse('http://localhost:4000/auth/new_token'),
-          body: jsonEncode({"refreshToken": tokens!.refreshToken}),
+          body: jsonEncode(
+              {"refreshToken": ref.read(tokensProvider).refreshToken}),
           headers: headers);
+      print(response.body);
       if (response.statusCode != 200) {
         if (jsonDecode(response.body)["error"] == 'invalid token') {
           await ref.read(tokensProvider).deleteLocalTokens();
