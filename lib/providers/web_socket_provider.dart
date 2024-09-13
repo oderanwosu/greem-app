@@ -13,7 +13,6 @@ final messageWSServiceProvider = Provider<MessageWS>((ref) {
 StreamProvider messageWSStreamProvider = StreamProvider((ref) async* {
   ref.watch(messageWSServiceProvider).connect();
   await for (final value
-  
       in ref.watch(messageWSServiceProvider).channel!.stream) {
     yield value;
   }

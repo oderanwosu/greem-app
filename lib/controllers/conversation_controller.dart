@@ -17,7 +17,7 @@ class ConversationDataController extends StateNotifier<AsyncValue<void>> {
 
   ConversationDataController({required this.ref})
       : super(const AsyncData<void>(null)) {
-    getConversation(ref.watch(conversationIDprovider));
+    getConversation(ref.read(conversationIDprovider));
   }
 
   Future<void> sendMessage() async {
@@ -27,7 +27,6 @@ class ConversationDataController extends StateNotifier<AsyncValue<void>> {
         final response = await ref
             .read(dataRepositoryProvider)
             .sendMessage(body ?? '', conversation?.id ?? '');
-        ;
 
         await ref.read(messageWSServiceProvider).sendMessage(response.body);
       },
@@ -44,13 +43,7 @@ class ConversationDataController extends StateNotifier<AsyncValue<void>> {
         var response =
             await ref.read(dataRepositoryProvider).getConversation(id);
         conversation = response;
-        return;
-      },
-    );
-
-    ref.watch(messageWSStreamProvider.stream).listen((event) async {
-      state = await AsyncValue.guard(
-        () async {
+        ref.watch(messageWSStreamProvider.stream).listen((event) async {
           final message =
               Message.fromJson(jsonDecode(event)["payload"]["message"]);
           message.isFromUser = conversation?.userID == message.senderID;
@@ -63,9 +56,9 @@ class ConversationDataController extends StateNotifier<AsyncValue<void>> {
           // var response =
           //     await ref.read(dataRepositoryProvider).getConversation(id);
           // conversation = response;
-        },
-      );
-    });
+        });
+      },
+    );
   }
 
   Widget buildMessageList(context, index) {

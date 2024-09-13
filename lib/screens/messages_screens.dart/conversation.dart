@@ -19,6 +19,8 @@ class ConversationScreenState extends ConsumerState<ConversationScreen> {
   Widget build(BuildContext context) {
     var state = ref.watch(conversationDataControllerProvider);
 
+    
+
     return !state.isLoading
         ? Scaffold(
             appBar: AppBar(
@@ -29,7 +31,7 @@ class ConversationScreenState extends ConsumerState<ConversationScreen> {
                     'Messages')),
             body: MessageList(
                 messages: ref
-                        .read(conversationDataControllerProvider.notifier)
+                        .watch(conversationDataControllerProvider.notifier)
                         .conversation
                         ?.messages ??
                     []))
